@@ -10,15 +10,18 @@
 *******************************************************************************/
 
 // Definities
-#define DEBUG_ENABLED           true
+#define DEBUG_ENABLED           false // Output info via de seriële poort
 
-#define DISPLAY_ROWS            1
-#define DISPLAY_COLUMNS         1
-#define DISPLAY_HARDWARE_TYPE   MD_MAX72XX::PAROLA_HW
+// Aantal rijen displays (Voor de A-Vision ESP8266 learning board is dat 1)
+#define DISPLAY_ROWS            1   
+// Aantal kolommen displays (Voor de A-Vision ESP8266 learning board is dat 1)
+#define DISPLAY_COLUMNS         1   
+// Gebruikte display type (Voor de A-Vision ESP8266 learning board is dat MD_MAX72XX::PAROLA_HW)
+#define DISPLAY_HARDWARE_TYPE   MD_MAX72XX::PAROLA_HW 
 
 // Includes
-#include "avision_debug.h"
-#include "avision_display.h"
+#include <avision_debug.h>
+#include <avision_display.h>
 
 // Maak display object
 AVision::dotmatrixDisplay display;

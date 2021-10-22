@@ -9,8 +9,8 @@
 *
 *******************************************************************************/
 
-#include "avision_debug.h"
-#include "avision_ir_remote.h"
+#include <avision_debug.h>
+#include <avision_ir_remote.h>
 
 using namespace AVision;
 
@@ -49,20 +49,6 @@ void IRremote::resetCodeEvents()
     action_index = 0;
 }
 
-void IRremote::init()
-{
-    assert(irutils::lowLevelSanityCheck() == 0);
-#if DECODE_HASH
-    // Ignore messages with less than minimum on or off pulses.
-    irrecv->setUnknownThreshold(IR_UNKNOWN_SIZE);
-#endif // DECODE_HASH
-
-    irrecv->setTolerance(IR_TOLERANCE); // Override the default tolerance.
-    irrecv->enableIRIn();               // Start the receiver
-
-    dbgln("IRremote initialised");
-}
-
 void IRremote::loop()
 {
     decode_results results;
@@ -98,9 +84,28 @@ void IRremote::loop()
     }
 }
 
+void IRremote::init(int pin)
+{
+    irrecv = new IRrecv(pin, IR_BUFFER_SIZE, IR_RECEIVE_TIMEOUT, true);
+
+    assert(irutils::lowLevelSanityCheck() == 0);
+#if DECODE_HASH
+    // Ignore messages with less than minimum on or off pulses.
+    irrecv->setUnknownThreshold(IR_UNKNOWN_SIZE);
+#endif // DECODE_HASH
+
+    irrecv->setTolerance(IR_TOLERANCE); // Override the default tolerance.
+    irrecv->enableIRIn();               // Start the receiver
+
+    dbgln("IRremote initialised");
+}
+void IRremote::init()
+{
+    init(IR_RECEIVE_PIN);
+}
+
 IRremote::IRremote()
 {
-    irrecv = new IRrecv(IR_RECEIVE_PIN, IR_BUFFER_SIZE, IR_RECEIVE_TIMEOUT, true);
 }
 
 IRremote::~IRremote()

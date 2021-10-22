@@ -8,11 +8,11 @@
 * Created on       :        27-09-2021
 *
 *******************************************************************************/
-#include "avision_system.h"
+#include <avision_system.h>
 
 #include <Adafruit_NeoPixel.h>
 
-#include "avision_debug.h"
+#include <avision_debug.h>
 
 #ifndef LED_DIN_PIN
 #define LED_DIN_PIN D3
@@ -74,9 +74,9 @@ namespace AVision
             void setLEDreversed(bool on);
 
             void loop();
+            void init(int pin);
             void init();
 
-            RGBleds(int pin);
             RGBleds();
             ~RGBleds();
     };

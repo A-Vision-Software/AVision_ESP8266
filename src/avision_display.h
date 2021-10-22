@@ -8,7 +8,7 @@
 * Created on       :        08-09-2021
 *
 *******************************************************************************/
-#include "avision_system.h"
+#include <avision_system.h>
 
 // https://github.com/MajicDesigns/MD_MAX72XX
 #include <SPI.h>
@@ -18,7 +18,7 @@
 #define __DISPLAY_H__
 
 // https://pjrp.github.io/MDParolaFontEditor
-#include "avision_font_with_tiny_numbers.h"
+#include <avision_font_with_tiny_numbers.h>
 
 // Define the number of devices we have in the chain and the hardware interface
 #ifndef DISPLAY_HARDWARE_TYPE

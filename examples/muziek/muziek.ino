@@ -10,16 +10,20 @@
 *******************************************************************************/
 
 // Definities
-#define DEBUG_ENABLED           true
+#define DEBUG_ENABLED           false // Output info via de seriële poort
 
-#include "avision_debug.h"
-#include "avision_beep.h"
+// Op welke pin wordt de BUZZER aangesloten (Voor de A-Vision ESP8266 learning board is dat D0)
+#define BEEP_BUZZER             D0
+
+#include <avision_debug.h>
+#include <avision_beep.h>
+// Laad de melodie, toonhoogte en duur
 #include "melody.h"
 
 void setup()
 {
     initDebug(DEBUG_ENABLED);
-    initBeep();
+    initBeep(BEEP_BUZZER);
 }
 
 void loop()

@@ -10,32 +10,39 @@
 *******************************************************************************/
 
 // Definities
-#define DEBUG_ENABLED   true
+#define DEBUG_ENABLED           false // Output info via de seriële poort
 
-#define DISPLAY_ROWS            1
-#define DISPLAY_COLUMNS         1
+// Aantal rijen displays (Voor de A-Vision ESP8266 learning board is dat 1)
+#define DISPLAY_ROWS            1   
+// Aantal kolommen displays (Voor de A-Vision ESP8266 learning board is dat 1)
+#define DISPLAY_COLUMNS         1   
+// Gebruikte display type (Voor de A-Vision ESP8266 learning board is dat MD_MAX72XX::PAROLA_HW)
 #define DISPLAY_HARDWARE_TYPE   MD_MAX72XX::PAROLA_HW
-#define BUTTON1                 D5
 
-#include "avision_debug.h"
-#include "avision_RGBleds.h"
-#include "avision_display.h"
+#include <avision_debug.h>
+#include <avision_RGBleds.h>
+#include <avision_display.h>
 
 // https://github.com/adafruit/Adafruit_NeoPixel/blob/master/Adafruit_NeoPixel.h
-AVision::RGBleds leds; // RGB Din => D3
+AVision::RGBleds leds;
+// LED posities -
+//          [0] [1] [2] [3]
+//          [4] [5] [6] [7]
+
 // Maak display object
 AVision::dotmatrixDisplay display;
 
 void setup()
 {
-    // https://www.arduino.cc/reference/en/language/functions/digital-io/pinmode/
-    pinMode(BUTTON1, INPUT_PULLUP);
-
     initDebug(DEBUG_ENABLED);
     display.init(DISPLAY_ROWS, DISPLAY_COLUMNS);
+
+    // Aantal RGB LEDs (Voor de A-Vision ESP8266 learning board is dat 8)
     leds.setLEDcount(8);
+    // LED type (WS2812 => NEO_GRB) (Voor de A-Vision ESP8266 learning board is dat NEO_GRB)
     leds.setLEDtype(NEO_GRB);
-    leds.init();
+    // LEDs Data in (Din) pin (Voor de A-Vision ESP8266 learning board is dat D3)
+    leds.init(D3);
 
     // Kleuren -> Rood, Groen, Blauw, Wit
     // Waarden -> o is uit, 255 is maximaal

@@ -9,20 +9,22 @@
 *
 *******************************************************************************/
 
-#include "avision_debug.h"
-#include "avision_beep.h"
+#include <avision_debug.h>
+#include <avision_beep.h>
+
+int buzzer_pin = BEEP_BUZZER;
 
 void beep(unsigned int frequency, int milliseconds, int pause)
 {
     if (milliseconds)
     {
-        tone(BEEP_BUZZER, frequency, milliseconds);
+        tone(buzzer_pin, frequency, milliseconds);
     }
     if (pause)
     {
         delay(milliseconds + pause);
-        noTone(BEEP_BUZZER);
-        digitalWrite(BEEP_BUZZER, LOW);
+        noTone(buzzer_pin);
+        digitalWrite(buzzer_pin, LOW);
     }
 }
 void beep(int milliseconds, int pause = 0)
@@ -30,9 +32,14 @@ void beep(int milliseconds, int pause = 0)
     beep(BEEP_FREQUENCY, milliseconds, pause);
 }
 
+void initBeep(int pin)
+{
+    buzzer_pin = pin;
+    pinMode(buzzer_pin, OUTPUT);
+    digitalWrite(buzzer_pin, LOW);
+    dbgln("Beep initialised");
+}
 void initBeep()
 {
-    pinMode(BEEP_BUZZER, OUTPUT);
-    digitalWrite(BEEP_BUZZER, LOW);
-    dbgln("Beep initialised");
+    initBeep(BEEP_BUZZER);
 }

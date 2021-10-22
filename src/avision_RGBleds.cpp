@@ -9,8 +9,8 @@
 *
 *******************************************************************************/
 
-#include "avision_debug.h"
-#include "avision_RGBleds.h"
+#include <avision_debug.h>
+#include <avision_RGBleds.h>
 
 using namespace AVision;
 
@@ -141,13 +141,17 @@ void RGBleds::setLEDcount(uint8_t count)
         orientationFirstLED[1] = 1 * LEDcount / 4;
         orientationFirstLED[2] = 2 * LEDcount / 4;
         orientationFirstLED[3] = 3 * LEDcount / 4;
-        leds->updateLength(LEDcount);
+        if (leds != nullptr) {
+            leds->updateLength(LEDcount);
+        }
     }
 }
 void RGBleds::setLEDtype(uint16_t type)
 {
     LEDtype = type;
-    leds->updateType(type);
+    if (leds != nullptr) {
+        leds->updateType(type);
+    }
 }
 void RGBleds::setLEDreversed(bool on)
 {
@@ -165,11 +169,11 @@ void RGBleds::rotate(bool on)
     {
         if (on)
         {
-            setLED(i, leds->Color(255, 255, 255, 255));
+            setLED(i, color(255, 255, 255, 255));
         }
         else
         {
-            setLED(i, leds->Color(0, 0, 0, 0));
+            setLED(i, color(0, 0, 0, 0));
         }
         update();
         delay(500 / LEDcount);
@@ -285,8 +289,9 @@ void RGBleds::loop()
     update();
 }
 
-void RGBleds::init()
+void RGBleds::init(int pin)
 {
+    leds = new Adafruit_NeoPixel(LEDcount, pin, LEDtype + NEO_KHZ800);
     leds->begin();
     leds->show();
     for (size_t i = 0; i < LEDcount; i++)
@@ -298,18 +303,18 @@ void RGBleds::init()
 
     dbgln("RGBleds initialised");
 }
-
-RGBleds::RGBleds(int pin)
+void RGBleds::init()
 {
+    init(LED_DIN_PIN);
+}
+
+RGBleds::RGBleds()
+{
+    leds = nullptr;
     LEDtype = LED_TYPE;
     LEDcount = LED_COUNT;
     LEDreversed = LED_REVERSED;
-    leds = new Adafruit_NeoPixel(LEDcount, pin, LEDtype + NEO_KHZ800);
     currentBrightness = 0;
-}
-RGBleds::RGBleds()
-{
-    RGBleds(LED_DIN_PIN);
 }
 
 RGBleds::~RGBleds()

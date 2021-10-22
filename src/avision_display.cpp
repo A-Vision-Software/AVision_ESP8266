@@ -9,8 +9,8 @@
 *
 *******************************************************************************/
 
-#include "avision_debug.h"
-#include "avision_display.h"
+#include <avision_debug.h>
+#include <avision_display.h>
 
 using namespace AVision;
 

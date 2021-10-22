@@ -10,17 +10,21 @@
 *******************************************************************************/
 
 // Definities
-#define DEBUG_ENABLED           true
+#define DEBUG_ENABLED           false // Output info via de seriële poort
 
+// Aantal rijen displays (Voor de A-Vision ESP8266 learning board is dat 1)
 #define DISPLAY_ROWS            1
+// Aantal kolommen displays (Voor de A-Vision ESP8266 learning board is dat 1)
 #define DISPLAY_COLUMNS         1
-#define DISPLAY_HARDWARE_TYPE   MD_MAX72XX::PAROLA_HW
+// Gebruikte display type (Voor de A-Vision ESP8266 learning board is dat MD_MAX72XX::PAROLA_HW)
+#define DISPLAY_HARDWARE_TYPE   MD_MAX72XX::PAROLA_HW 
 
+// Digitale ingang voor de drukknop (Vrije keuze)
 #define BUTTON1                 D6
 
 // Includes
-#include "avision_debug.h"
-#include "avision_display.h"
+#include <avision_debug.h>
+#include <avision_display.h>
 // https://pjrp.github.io/MDParolaFontEditor -- maak je eigen font
 #include "dies_font.h"
 

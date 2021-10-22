@@ -8,31 +8,31 @@
 * Created on       :        08-10-2021
 *
 *******************************************************************************/
-#include <Adafruit_NeoPixel.h>
 
-#define DEBUG_ENABLED   true
+// Definities
+#define DEBUG_ENABLED           false // Output info via de seriële poort
 
-#define BUTTON1         D5
-#define BUTTON2         D6
-#define BUTTON3         D7
-#define BUTTON4         D0
+// Definieer op welke Digitale ingang de drukknoppen zijn aangesloten
+#define BUTTON1                 D5
+#define BUTTON2                 D6
+#define BUTTON3                 D7
+#define BUTTON4                 D0
 
-#define LED_DIN_PIN     D3
-#define LED_TYPE        NEO_GRB
-#define LED_COUNT       8
-
-#include "avision_debug.h"
-#include "avision_RGBleds.h"
+#include <avision_debug.h>
+#include <avision_RGBleds.h>
 
 // https://github.com/adafruit/Adafruit_NeoPixel/blob/master/Adafruit_NeoPixel.h
-AVision::RGBleds leds(LED_DIN_PIN); // RGB Din => D3
+AVision::RGBleds leds;
+// LED posities -
+//          [0] [1] [2] [3]
+//          [4] [5] [6] [7]
 
 // Kleuren -> Rood, Groen, Blauw, Wit
-// Waarden -> 0 is uit, 255 is maximaal
-uint32_t red    = leds.color(128, 0, 0, 0);
-uint32_t green  = leds.color(0, 128, 0, 0);
-uint32_t blue   = leds.color(0, 0, 128, 0);
-uint32_t white  = leds.color(0, 0, 0, 128);
+uint32_t red;
+uint32_t green;
+uint32_t blue;
+uint32_t white;
+uint32_t bright_white;
 
 void setup()
 {
@@ -43,9 +43,19 @@ void setup()
     pinMode(BUTTON4, INPUT_PULLUP);
 
     initDebug(DEBUG_ENABLED);
-    leds.setLEDcount(LED_COUNT);
-    leds.setLEDtype(LED_TYPE);
-    leds.init();
+    // Aantal RGB LEDs (Voor de A-Vision ESP8266 learning board is dat 8)
+    leds.setLEDcount(8);
+    // LED type (WS2812 => NEO_GRB) (Voor de A-Vision ESP8266 learning board is dat NEO_GRB)
+    leds.setLEDtype(NEO_GRB);
+    // LEDs Data in (Din) pin (Voor de A-Vision ESP8266 learning board is dat D3)
+    leds.init(D3);
+
+    // Waarden -> 0 is uit, 255 is maximaal
+    red    = leds.color(128, 0, 0, 0);
+    green  = leds.color(0, 128, 0, 0);
+    blue   = leds.color(0, 0, 128, 0);
+    white  = leds.color(0, 0, 0, 128);
+    bright_white = leds.color(255, 255, 255, 255);
 
     // Licht helderheid in procenten 0% - 100%
     leds.setBrightness(100);
