@@ -20,9 +20,11 @@
 // https://pjrp.github.io/MDParolaFontEditor
 #include <avision_font_with_tiny_numbers.h>
 
+#define AVISION_DISPLAY         MD_MAX72XX::DR0CR1RR1_HW
+
 // Define the number of devices we have in the chain and the hardware interface
 #ifndef DISPLAY_HARDWARE_TYPE
-#define DISPLAY_HARDWARE_TYPE   MD_MAX72XX::DR1CR0RR0_HW
+#define DISPLAY_HARDWARE_TYPE   AVISION_DISPLAY
 #endif
 
 #define CLK_PIN                 D5  // or SCK
@@ -60,6 +62,7 @@ namespace AVision
             void setIntensity(uint8_t intensity); // whole display
             void setFont(MD_MAX72XX::fontType_t *f);
             void loop();
+            void init(int columns, int rows, MD_MAX72XX::moduleType_t hardware_type);
             void init(int columns, int rows);
 
             dotmatrixDisplay();

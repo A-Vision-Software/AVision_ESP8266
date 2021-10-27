@@ -182,13 +182,13 @@ void dotmatrixDisplay::loop()
         showText(0, display_columns * display_rows - 1, (char *)text.c_str());
     }
 }
-void dotmatrixDisplay::init(int columns, int rows)
+void dotmatrixDisplay::init(int columns, int rows, MD_MAX72XX::moduleType_t hardware_type)
 {
     display_columns = columns;
     display_rows = rows;
 
     // SPI hardware interface
-    display = new MD_MAX72XX(DISPLAY_HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, display_columns * display_rows);
+    display = new MD_MAX72XX(hardware_type, DATA_PIN, CLK_PIN, CS_PIN, display_columns * display_rows);
     display->begin();
     display->setFont(_font_with_tiny_numbers);
 
@@ -196,7 +196,10 @@ void dotmatrixDisplay::init(int columns, int rows)
 
     dbgln("Display initialised");
 }
-
+void dotmatrixDisplay::init(int columns, int rows)
+{
+    init(int columns, int rows, DISPLAY_HARDWARE_TYPE);
+}
 dotmatrixDisplay::dotmatrixDisplay()
 {
     display_columns = 1;

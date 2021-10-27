@@ -16,8 +16,6 @@
 #define DISPLAY_ROWS            1
 // Aantal kolommen displays (Voor de A-Vision ESP8266 learning board is dat 1)
 #define DISPLAY_COLUMNS         1
-// Gebruikte display type (Voor de A-Vision ESP8266 learning board is dat MD_MAX72XX::PAROLA_HW)
-#define DISPLAY_HARDWARE_TYPE   MD_MAX72XX::PAROLA_HW 
 
 // Digitale ingang voor de drukknop (Vrije keuze)
 #define BUTTON1                 D6
@@ -37,7 +35,7 @@ void setup()
     pinMode(BUTTON1, INPUT_PULLUP);
 
     initDebug(DEBUG_ENABLED);
-    display.init(DISPLAY_ROWS, DISPLAY_COLUMNS);
+    display.init(DISPLAY_ROWS, DISPLAY_COLUMNS, AVISION_DISPLAY);
     display.setFont(_font_die_numbers);
 
     display.text = "";

@@ -16,8 +16,6 @@
 #define DISPLAY_ROWS            1   
 // Aantal kolommen displays (Voor de A-Vision ESP8266 learning board is dat 1)
 #define DISPLAY_COLUMNS         1   
-// Gebruikte display type (Voor de A-Vision ESP8266 learning board is dat MD_MAX72XX::PAROLA_HW)
-#define DISPLAY_HARDWARE_TYPE   MD_MAX72XX::PAROLA_HW 
 
 // Includes
 #include <avision_debug.h>
@@ -29,7 +27,7 @@ AVision::dotmatrixDisplay display;
 void setup()
 {
     initDebug(DEBUG_ENABLED);
-    display.init(DISPLAY_ROWS, DISPLAY_COLUMNS);
+    display.init(DISPLAY_ROWS, DISPLAY_COLUMNS, AVISION_DISPLAY);
     display.text = "";
 }
 
