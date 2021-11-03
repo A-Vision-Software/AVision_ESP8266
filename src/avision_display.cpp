@@ -198,7 +198,7 @@ void dotmatrixDisplay::init(int columns, int rows, MD_MAX72XX::moduleType_t hard
 }
 void dotmatrixDisplay::init(int columns, int rows)
 {
-    init(int columns, int rows, DISPLAY_HARDWARE_TYPE);
+    init(columns, rows, DISPLAY_HARDWARE_TYPE);
 }
 dotmatrixDisplay::dotmatrixDisplay()
 {
