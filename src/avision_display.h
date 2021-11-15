@@ -42,7 +42,8 @@ namespace AVision
             MD_MAX72XX *display;
             uint8_t display_brightness;
 
-            void showText(uint8_t start, uint8_t end, char* text);
+            void printText(uint8_t start, uint8_t end, char *text);
+
             int display_rows;
             int display_columns;
 

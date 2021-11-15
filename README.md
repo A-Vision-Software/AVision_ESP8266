@@ -1,2 +1,2 @@
-# AVision_ESP8266_learning_board
+# AVision_ESP8266
  Learn programming on a ESP8266 (Arduino compatible)

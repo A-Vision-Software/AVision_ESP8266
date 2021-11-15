@@ -56,86 +56,60 @@ void dotmatrixDisplay::setColumn(uint8_t column, uint8_t value)
     display->setColumn(column, value);
 }
 
-void dotmatrixDisplay::showText(uint8_t modStart, uint8_t modEnd, char *pMsg)
-// Print the text string to the LED matrix modules specified.
-// Message area is padded with blank columns after printing.
+void dotmatrixDisplay::printText(uint8_t modStart, uint8_t modEnd, char *text)
 {
     char c;
-    uint8_t state = 0;
-    uint8_t curLen;
-    uint16_t showLen;
+    int16_t col = modStart * COL_SIZE;
+    uint16_t len = 0;
+    uint16_t size = 0;
     uint8_t cBuf[8];
-    int16_t col = ((modEnd + 1) * COL_SIZE) - 1;
+    uint8_t data;
     bool tiny = false;
 
     display->control(modStart, modEnd, MD_MAX72XX::UPDATE, MD_MAX72XX::OFF);
 
-    do // finite state machine to print the characters in the space available
+    do
     {
-        switch (state)
-        {
-        case 0: // Load the next character from the font table
-            // if we reached end of message, reset the message pointer
-            c = *pMsg;
-            if (c == '\0')
-            {
-                showLen = col - (modEnd * COL_SIZE); // padding characters
-                state = 2;
-                break;
-            }
+        if (size == 0) {
+            c = *text;
             if (c == '▼')
             {
                 tiny = true;
-                break;
+                text++;
+                c = *text;
             }
             if (c == '▲')
             {
                 tiny = false;
-                break;
+                text++;
+                c = *text;
             }
-
-            if (tiny && c >= 42 && c <= 62)
-            {
-                c += 100;
+            if (c == '\0') {
+                size = 1;
+            } else {
+                if (tiny && c >= 42 && c <= 62)
+                {
+                    c += 100;
+                }
+                text++;
+                len = display->getChar(c, sizeof(cBuf) / sizeof(cBuf[0]), cBuf);
+                size = len;
             }
-
-            // retrieve the next character form the font file
-            showLen = display->getChar(c, sizeof(cBuf) / sizeof(cBuf[0]), cBuf);
-            pMsg++;
-            curLen = 0;
-            state++;
-            // !! deliberately fall through to next state to start displaying
-
-        case 1: // display the next part of the character
-            display->setColumn(col--, cBuf[curLen++]);
-
-            // done with font character, now display the space between chars
-            if (curLen == showLen)
-            {
-                showLen = CHAR_SPACING;
-                state = 2;
-            }
-            break;
-
-        case 2: // initialize state for displaying empty columns
-            curLen = 0;
-            state++;
-            // fall through
-
-        case 3: // display inter-character spacing or end of message padding (blank columns)
-            display->setColumn(col--, 0);
-            curLen++;
-            if (curLen == showLen)
-                state = 0;
-            break;
-
-        default:
-            col = -1; // this definitely ends the do loop
         }
-        ESP.wdtFeed();
-    } while (col >= (modStart * COL_SIZE));
+        if (size > 0) {
+            data = 0x00;
+            if (c != '\0') {
+                data = cBuf[len - size];
+            }
+            display->setColumn(col++, data);
+            size--;
+            if (size == 0 && c != ' ' && c != '\0') {
+                size = CHAR_SPACING;
+                c = '\0';
+            }
+        }
+    } while (col < (modEnd+1) * COL_SIZE);    
 
-    // display->transform(modStart, modEnd, MD_MAX72XX::TFUD); display->transform(modStart, modEnd, MD_MAX72XX::TFLR);
     display->control(modStart, modEnd, MD_MAX72XX::UPDATE, MD_MAX72XX::ON);
 }
 
@@ -154,7 +128,7 @@ void dotmatrixDisplay::setIntensity(uint8_t intensity)
 }
 void dotmatrixDisplay::shiftLeft()
 {
-    display->transform(MD_MAX72XX::TSL);
+    display->transform(MD_MAX72XX::TSR);
 }
 
 void dotmatrixDisplay::invert(uint8_t startDev, uint8_t endDev)
@@ -168,18 +142,19 @@ void dotmatrixDisplay::setFont(MD_MAX72XX::fontType_t *f)
 
 void dotmatrixDisplay::loop()
 {
-    size_t newLine = text.indexOf("\n");
-    if (newLine >= 0)
-    {
-        if (newLine > 0)
+    const char *t = text.c_str();
+    size_t row = 0;
+    if (text.indexOf('\n') < 0) {
+        printText(0, (display_rows * display_columns) - 1, (char *)t);
+    } else {
+        char *part;
+        part = strtok((char *)t, "\n");
+        while (part != nullptr)
         {
-            showText(display_columns, display_columns * display_rows - 1, (char *)text.substring(0, newLine).c_str());
+            printText(row * display_columns, (row * display_columns + display_columns) - 1, part);
+            part = strtok(NULL, "\n");
+            row++;
         }
-        showText(0, display_columns - 1, (char *)text.substring(newLine + 1).c_str());
-    }
-    else
-    {
-        showText(0, display_columns * display_rows - 1, (char *)text.c_str());
     }
 }
 void dotmatrixDisplay::init(int columns, int rows, MD_MAX72XX::moduleType_t hardware_type)
